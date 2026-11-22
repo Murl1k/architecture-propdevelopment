@@ -1,0 +1,11 @@
+namespaces в кластере заведены по доменам компании: sales это продажи, tenant это жку, finance это финансы, data это данные
+
+группа пользователя берется из поля O клиентского сертификата
+
+| Роль | Права роли | Группы пользователей |
+| --- | --- | --- |
+| cluster-viewer | clusterrole, только просмотр (get, list, watch) во всем кластере: namespaces, nodes, pods, services, endpoints, persistentvolumes, persistentvolumeclaims, resourcequotas, limitranges, serviceaccounts, events, deployments, statefulsets, daemonsets, replicasets, jobs, cronjobs, networkpolicies, ingresses, storageclasses, roles, rolebindings, clusterroles, clusterrolebindings; прав на secrets, логи и configmaps нет, менять ничего нельзя | product-owners: владельцы продуктов; business-analysts: бизнес-аналитики; devops: devops-инженеры и security: специалист по информационной безопасности, у них просмотр вдобавок к своей роли |
+| cluster-configurator | clusterrole, просмотр, создание, изменение и удаление ресурсов настройки кластера: namespaces, nodes, persistentvolumes, persistentvolumeclaims, resourcequotas, limitranges, serviceaccounts, networkpolicies, storageclasses, roles, rolebindings, clusterroles, clusterrolebindings; прав на изменение рабочих нагрузок (pods, deployments и подобные) и на secrets нет | devops: devops-инженеры |
+| secret-manager | clusterrole, привилегированная: просмотр, создание, изменение и удаление secrets во всех namespace, больше ничего | security: специалист по информационной безопасности |
+| developer | role в каждом namespace домена, права только внутри него: просмотр, создание, изменение и удаление pods, логов pods, services, configmaps, persistentvolumeclaims, deployments, statefulsets, replicasets, jobs, cronjobs, ingresses; прав на secrets нет | sales-developers, tenant-developers, finance-developers, data-developers: разработчики соответствующего домена |
+| operator | role в каждом namespace домена, права только внутри него: просмотр и изменение (update, patch) pods, логов pods, services, configmaps, deployments, statefulsets, replicasets, jobs, cronjobs, ingresses, в том числе перезапуск приложения (rollout restart); создавать и удалять ресурсы нельзя; прав на secrets нет | sales-operations, tenant-operations, finance-operations, data-operations: инженеры по эксплуатации соответствующего домена |
